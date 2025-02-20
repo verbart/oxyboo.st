@@ -127,6 +127,12 @@ export default function Page() {
       <footer className="container mx-auto px-4">
         <div className="py-8 border-t border-gray-200 dark:border-gray-600 text-center text-gray-500">
           <p>© {new Date().getFullYear()} OxyBoost. All rights reserved.</p>
+          <a 
+            href={`mailto:${encodeURIComponent('support@oxyboo.st')}?subject=${encodeURIComponent('OxyBoost Support')}`}
+            className="text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block"
+          >
+            support@oxyboo.st
+          </a>
         </div>
       </footer>
     </div>
