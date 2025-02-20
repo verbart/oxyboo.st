@@ -1,0 +1,5 @@
+.embla__slide.is-selected [data-active="true"] {
+  transform: scale(1.1);
+  z-index: 10;
+  filter: brightness(1);
+}
