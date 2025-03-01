@@ -13,6 +13,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-title" content="OxyBoost" />
+        <meta name="apple-itunes-app" content="app-id=6739809272" />
         <meta
           name="description"
           content="OxyBoost is the apnea training app for freedivers, athletes, and breathing enthusiasts"
