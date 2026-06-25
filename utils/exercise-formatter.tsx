@@ -1,12 +1,13 @@
 import React from 'react';
 import { ClockIcon, LayersIcon, BarChart3Icon } from 'lucide-react';
-import { formatTime } from './format-utils';
+import { formatTime, intervalSeconds, phaseSeconds, PhaseLike } from './format-utils';
 import { difficultyLabelsMap } from './exercise-types';
 
-// Define interval shape
+// Define interval shape. breathe/hold may be plain numbers (legacy) or Phase objects.
 export interface Interval {
-  breathe: number;
-  hold: number;
+  breathe: PhaseLike;
+  hold: PhaseLike;
+  additionalTime?: number;
 }
 
 // Define the interface for formatted exercise info items
@@ -26,7 +27,7 @@ export const getExerciseInfo = (exercise: any): string => {
 
       const maxHold = formatTime(exercise.max_hold_time);
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${difficultyLabelsMap[exercise.difficulty]} • ${maxHold} max`;
     }
@@ -38,8 +39,8 @@ export const getExerciseInfo = (exercise: any): string => {
 
       const comfortTime = formatTime(exercise.max_hold_time);
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
-      const breatheTime = formatTime(exercise.intervals[0].breathe);
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
+      const breatheTime = formatTime(phaseSeconds(exercise.intervals[0].breathe));
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${breatheTime} breathe • ${comfortTime} hold`;
     }
@@ -50,8 +51,8 @@ export const getExerciseInfo = (exercise: any): string => {
       }
 
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
-      const maxHold = Math.max(...exercise.intervals.map((interval: Interval) => interval.hold));
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
+      const maxHold = Math.max(...exercise.intervals.map((interval: Interval) => phaseSeconds(interval.hold)));
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${formatTime(maxHold)} max`;
     }

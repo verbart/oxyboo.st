@@ -5,6 +5,7 @@ import { ArrowLeftIcon, QrCodeIcon, AlertCircleIcon, ClockIcon, LayersIcon, BarC
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { QRCode } from '@/components/qr-code';
 import { createClient } from '@/utils/supabase/server';
+import { intervalSeconds, phaseSeconds, PhaseLike } from '@/utils/format-utils';
 import Script from 'next/script';
 
 // This enables dynamic rendering for this page since we need to fetch data
@@ -65,10 +66,11 @@ const difficultyLabelsMap: Record<string, string> = {
   hard: 'Hard'
 };
 
-// Define interval shape
+// Define interval shape. breathe/hold may be plain numbers (legacy) or Phase objects.
 interface Interval {
-  breathe: number;
-  hold: number;
+  breathe: PhaseLike;
+  hold: PhaseLike;
+  additionalTime?: number;
 }
 
 // Function to format exercise info
@@ -82,7 +84,7 @@ const getExerciseInfo = (exercise: any): string => {
 
       const maxHold = formatTime(exercise.max_hold_time);
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${difficultyLabelsMap[exercise.difficulty]} • ${maxHold} max`;
     }
@@ -94,8 +96,8 @@ const getExerciseInfo = (exercise: any): string => {
 
       const comfortTime = formatTime(exercise.max_hold_time);
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
-      const breatheTime = formatTime(exercise.intervals[0].breathe);
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
+      const breatheTime = formatTime(phaseSeconds(exercise.intervals[0].breathe));
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${breatheTime} breathe • ${comfortTime} hold`;
     }
@@ -106,8 +108,8 @@ const getExerciseInfo = (exercise: any): string => {
       }
 
       const reps = exercise.intervals.length;
-      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + interval.breathe + interval.hold, 0);
-      const maxHold = Math.max(...exercise.intervals.map((interval: Interval) => interval.hold));
+      const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
+      const maxHold = Math.max(...exercise.intervals.map((interval: Interval) => phaseSeconds(interval.hold)));
 
       return `${formatTime(totalTime)} total • ${reps} reps • ${formatTime(maxHold)} max`;
     }
@@ -203,7 +205,12 @@ const formatExerciseInfo = (exercise: any): FormattedInfoItem[] => {
 
 export default async function SharedExercisePage({ params }: { params: { id: string } }) {
   const exerciseId = params.id;
+  // Custom scheme: used for the "Open in App" button and the auto-redirect script,
+  // where a tap/JS redirect must open the app directly (universal links don't fire there).
   const deepLinkUrl = `oxyboost://shared-exercises/${exerciseId}`;
+  // Universal link: used for the QR code. Phone QR scanners reject custom schemes
+  // ("no usable data found"), and scanning an https link still opens the app via applinks.
+  const universalLinkUrl = `https://oxyboo.st/shared-exercises/${exerciseId}`;
   
   // Initialize the Supabase client
   const supabase = await createClient();
@@ -374,7 +381,7 @@ export default async function SharedExercisePage({ params }: { params: { id: str
                 
                 <div className="flex justify-center">
                   <div className="bg-white p-3 rounded-lg">
-                    <QRCode value={deepLinkUrl} size={180} />
+                    <QRCode value={universalLinkUrl} size={180} />
                   </div>
                 </div>
               </div>
