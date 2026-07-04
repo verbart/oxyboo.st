@@ -9,30 +9,13 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 
 const screenshots = [
-  {
-    src: '/screenshots/1.png',
-    alt: 'OxyBoost exercise selection screen'
-  },
-  {
-    src: '/screenshots/2.png',
-    alt: 'OxyBoost training screen'
-  },
-  {
-    src: '/screenshots/3.png',
-    alt: 'OxyBoost statistics screen'
-  },
-  {
-    src: '/screenshots/4.png',
-    alt: 'OxyBoost training screen'
-  },
-  {
-    src: '/screenshots/5.png',
-    alt: 'OxyBoost statistics screen'
-  },
-  {
-    src: '/screenshots/6.png',
-    alt: 'OxyBoost statistics screen'
-  }
+  { src: '/screenshots/app-01.webp', alt: 'Breathing practices made for you' },
+  { src: '/screenshots/app-02.webp', alt: 'Pick your perfect exercise' },
+  { src: '/screenshots/app-03.webp', alt: 'Visual and audio guidance' },
+  { src: '/screenshots/app-04.webp', alt: 'Track your progress' },
+  { src: '/screenshots/app-05.webp', alt: 'Every session counts' },
+  { src: '/screenshots/app-06.webp', alt: 'Breathe with confidence' },
+  { src: '/screenshots/app-07.webp', alt: 'Customize your experience' }
 ];
 
 export function Carousel() {
@@ -53,11 +36,11 @@ export function Carousel() {
         {screenshots.map((screenshot, index) => (
           <SwiperSlide key={index} className="flex justify-center rounded-2xl overflow-hidden">
             <Image
-              width={250}
-              height={500}
+              width={400}
+              height={868}
               src={screenshot.src}
               alt={screenshot.alt}
-              className="object-cover transition-all duration-300"
+              className="w-full h-auto object-contain transition-all duration-300"
             />
           </SwiperSlide>
         ))}

@@ -16,10 +16,10 @@ export default function Page() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-12">
-        <div className="flex flex-wrap gap-12 items-center justify-center">
+        <div className="flex flex-col xl:flex-row gap-12 items-center justify-center">
           {/* Left Column - Content */}
-          <div className="flex-1 text-left md:text-left min-w-[300px] text-center md:text-left">
-            <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
+          <div className="w-full xl:flex-1 min-w-[300px] text-center xl:text-left">
+            <div className="flex items-center gap-2 mb-6 justify-center xl:justify-start">
               <Star className="w-5 h-5 text-blue-600"/>
               <span className="text-gray-600 dark:text-gray-400">Featured on App Store</span>
             </div>
@@ -33,7 +33,7 @@ export default function Page() {
               breathing enthusiasts
             </p>
 
-            <div className="flex justify-center md:justify-start">
+            <div className="flex justify-center xl:justify-start">
               <Link
                 href="https://apps.apple.com/us/app/oxyboost-apnea-trainer/id6739809272?platform=iphone"
                 className="inline-block"
@@ -60,7 +60,7 @@ export default function Page() {
           </div>
 
           {/* Right Column - Carousel */}
-          <div className="w-full max-w-xl">
+          <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-3xl">
             <Carousel />
           </div>
         </div>
