@@ -29,7 +29,7 @@ export const getExerciseInfo = (exercise: any): string => {
       const reps = exercise.intervals.length;
       const totalTime = exercise.intervals.reduce((sum: number, interval: Interval) => sum + intervalSeconds(interval), 0);
 
-      return `${formatTime(totalTime)} total • ${reps} reps • ${difficultyLabelsMap[exercise.difficulty]} • ${maxHold} max`;
+      return `${formatTime(totalTime)} total • ${reps} reps • ${difficultyLabelsMap[exercise.difficulty]} • ${maxHold} PB`;
     }
 
     case 'relaxTable': {
@@ -114,8 +114,8 @@ export const formatExerciseInfo = (exercise: any): FormattedInfoItem[] => {
         icon: <BarChart3Icon className="w-4 h-4 text-amber-500" />,
         text: part
       });
-    } else if (part.includes('max') || part.includes('hold')) {
-      result.push({ 
+    } else if (part.includes('max') || part.includes('hold') || part.includes('PB')) {
+      result.push({
         icon: <ClockIcon className="w-4 h-4 text-purple-500" />,
         text: part
       });
